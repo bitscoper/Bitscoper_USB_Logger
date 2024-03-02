@@ -1,15 +1,15 @@
 /* By Abdullah As-Sadeed */
 
 /*
-gcc ./Bitscoper_USB_Logger.cpp -o ./Bitscoper_USB_Logger -ludev
+gcc ./Bitscoper_USB_Logger.c -o ./Bitscoper_USB_Logger -ludev
 */
 
-#include "csignal"
-#include "libudev.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "time.h"
+#include <signal.h>
+#include <libudev.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #define TERMINAL_TITLE_START "\033]0;"
 #define TERMINAL_TITLE_END "\007"
