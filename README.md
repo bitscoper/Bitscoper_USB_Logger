@@ -2,6 +2,13 @@
 Monitors udev USB events and logs device attributes. Works on Linux.
 
 ## Compilation
+### Installing Dependencies
+On Fedora,
+```
+sudo dnf install systemd-devel
+```
+
+### Compiling
 ```
 gcc ./Bitscoper_USB_Logger.c -o ./Bitscoper_USB_Logger -ludev
 ```

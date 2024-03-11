@@ -10,6 +10,7 @@ gcc ./Bitscoper_USB_Logger.c -o ./Bitscoper_USB_Logger -ludev
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #define TERMINAL_TITLE_START "\033]0;"
 #define TERMINAL_TITLE_END "\007"
