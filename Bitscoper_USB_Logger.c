@@ -73,8 +73,9 @@ void Handle_Signal(int signal)
 {
     if (signal == SIGINT)
     {
-        printf(TERMINAL_ANSI_COLOR_RED "\n\nYou interrupted me by SIGINT signal.\n" TERMINAL_ANSI_COLOR_RESET);
-        exit(signal);
+        const char *message = TERMINAL_ANSI_COLOR_RED "\n\nYou interrupted me by SIGINT signal.\n" TERMINAL_ANSI_COLOR_RESET;
+        write(STDOUT_FILENO, message, strlen(message));
+        quick_exit(signal);
     }
 }
 
