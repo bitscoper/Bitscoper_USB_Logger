@@ -5,8 +5,20 @@
 Monitors udev USB events and logs device attributes. Works on Linux.
 
 [![Release Code](https://github.com/bitscoper/Bitscoper_USB_Logger/actions/workflows/Release_Code.yaml/badge.svg)](https://github.com/bitscoper/Bitscoper_USB_Logger/actions/workflows/Release_Code.yaml)
+[![Synchronize AUR](https://github.com/bitscoper/Bitscoper_USB_Logger/actions/workflows/Synchronize_AUR.yaml/badge.svg)](https://github.com/bitscoper/Bitscoper_USB_Logger/actions/workflows/Synchronize_AUR.yaml)
 
 </div>
+
+## Repositories
+
+<div align="center">
+    <a href="https://aur.archlinux.org/packages/bitscoper-usb-logger-bin">
+      <img
+        src="https://raw.githubusercontent.com/bitscoper/bitscoper/main/External_Files/AUR.png"
+        height="48"
+        alt="AUR"
+    /></a>
+  </div>
 
 ## Compilation
 

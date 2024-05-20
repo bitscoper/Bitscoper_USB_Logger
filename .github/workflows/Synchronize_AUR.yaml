@@ -1,0 +1,59 @@
+# By Abdullah As-Sadeed
+
+name: Synchronize AUR
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  synchronize-aur:
+    name: Synchronize AUR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Change Directory and Clone AUR Repository
+        run: |
+          cd ..
+          eval "$(ssh-agent -s)"
+          ssh-add <(echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}")
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+          ssh-keyscan -H aur.archlinux.org >> ~/.ssh/known_hosts
+          git clone ssh://aur@aur.archlinux.org/bitscoper-usb-logger-bin.git
+        shell: bash
+
+      - name: Compare and Replace PKGBUILD and .SRCINFO If Needed
+        run: |
+          if cmp -s ../bitscoper-usb-logger-bin/PKGBUILD ${{ github.workspace }}/AUR/PKGBUILD; then
+            echo "PKGBUILD files are identical."
+          else
+            cp ${{ github.workspace }}/AUR/PKGBUILD ../bitscoper-usb-logger-bin/PKGBUILD
+            echo "CHANGES_DETECTED=1" >> $GITHUB_ENV
+          fi
+          if cmp -s ../bitscoper-usb-logger-bin/.SRCINFO ${{ github.workspace }}/AUR/.SRCINFO; then
+            echo ".SRCINFO files are identical."
+          else
+            cp ${{ github.workspace }}/AUR/.SRCINFO ../bitscoper-usb-logger-bin/.SRCINFO
+            echo "CHANGES_DETECTED=1" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Commit and Push Changes
+        run: |
+          if [ "$CHANGES_DETECTED" = "1" ]; then
+            cd ../bitscoper-usb-logger-bin
+            git config user.email "bitscoper@gmail.com"
+            git config user.name "bitscoper"
+            git add .
+            git commit -m "$(date)"
+            eval "$(ssh-agent -s)"
+            ssh-add <(echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}")
+            git push origin master
+          fi
+        shell: bash
