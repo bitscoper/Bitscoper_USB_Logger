@@ -1,0 +1,32 @@
+# By Abdullah As-Sadeed
+
+name: Release Code
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  release-code:
+    name: Release Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Delete Existing Tag and Release (If Any)
+        run: |
+          TAG_NAME='Rolling_Release'
+          RELEASE_ID=$(curl --silent --show-error --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME | jq '.id')
+          if [ "$RELEASE_ID" != "null" ]; then
+            curl --silent --show-error --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' --request DELETE https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID
+            git push --delete origin $TAG_NAME
+          fi
+        shell: bash
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          tag: Rolling_Release
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -4,8 +4,9 @@
 gcc ./Bitscoper_USB_Logger.c -o ./Bitscoper_USB_Logger -ludev
 */
 
-#include <signal.h>
 #include <libudev.h>
+#include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,6 +22,8 @@ gcc ./Bitscoper_USB_Logger.c -o ./Bitscoper_USB_Logger -ludev
 
 #define LOG_FILE "USB.log"
 
+bool keep_running = true;
+
 void append_data(char **data_string, size_t *data_length, const char *format, ...)
 {
     va_list arguments;
@@ -35,6 +38,11 @@ void append_data(char **data_string, size_t *data_length, const char *format, ..
         vsprintf(*data_string + *data_length, format, arguments);
         va_end(arguments);
         *data_length += needed - 1;
+    }
+    else
+    {
+        fprintf(stderr, TERMINAL_ANSI_COLOR_RED "Failed to allocate memory.\n" TERMINAL_ANSI_COLOR_RESET);
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -66,15 +74,31 @@ void log_USB_event(const char *event, struct udev_device *device, const char *ti
         fprintf(log_file, "%s", data_string);
         fclose(log_file);
     }
+    else
+    {
+        fprintf(stderr, TERMINAL_ANSI_COLOR_RED "Failed to open log file.\n" TERMINAL_ANSI_COLOR_RESET);
+    }
 
     free(data_string);
 }
 
 void Handle_Signal(int signal)
 {
-    if (signal == SIGINT)
+    if (signal == SIGINT || signal == SIGTERM)
     {
-        const char *message = TERMINAL_ANSI_COLOR_RED "\n\nYou interrupted me by SIGINT signal.\n" TERMINAL_ANSI_COLOR_RESET;
+        const char *message;
+
+        if (signal == SIGINT)
+        {
+            message = TERMINAL_ANSI_COLOR_RED "\n\nYou interrupted me by SIGINT signal.\n" TERMINAL_ANSI_COLOR_RESET;
+        }
+        else if (signal == SIGTERM)
+        {
+            message = TERMINAL_ANSI_COLOR_RED "\n\nYou interrupted me by SIGTERM signal.\n" TERMINAL_ANSI_COLOR_RESET;
+        }
+
+        keep_running = false;
+
         write(STDOUT_FILENO, message, strlen(message));
         quick_exit(signal);
     }
@@ -83,6 +107,7 @@ void Handle_Signal(int signal)
 int main(void)
 {
     signal(SIGINT, Handle_Signal);
+    signal(SIGTERM, Handle_Signal);
 
     printf(TERMINAL_TITLE_START "Bitscoper USB Logger" TERMINAL_TITLE_END);
 
@@ -106,7 +131,7 @@ int main(void)
 
     printf(TERMINAL_ANSI_COLOR_GREEN "Monitoring USB devices has been started." TERMINAL_ANSI_COLOR_RESET "\n\n");
 
-    while (1)
+    while (keep_running)
     {
         struct udev_device *device = udev_monitor_receive_device(monitor);
         if (device)
