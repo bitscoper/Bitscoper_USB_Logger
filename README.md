@@ -20,6 +20,8 @@ Monitors udev USB events and logs device attributes. Works on Linux.
     /></a>
   </div>
 
+`yay -S bitscoper-usb-logger`
+
 ## Compilation
 
 ### Installing Dependencies
