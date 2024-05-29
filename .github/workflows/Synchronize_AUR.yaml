@@ -25,21 +25,21 @@ jobs:
           mkdir -p ~/.ssh
           touch ~/.ssh/known_hosts
           ssh-keyscan -H aur.archlinux.org >> ~/.ssh/known_hosts
-          git clone ssh://aur@aur.archlinux.org/bitscoper-usb-logger-bin.git
+          git clone ssh://aur@aur.archlinux.org/bitscoper-usb-logger.git
         shell: bash
 
       - name: Compare and Replace PKGBUILD and .SRCINFO If Needed
         run: |
-          if cmp -s ../bitscoper-usb-logger-bin/PKGBUILD ${{ github.workspace }}/AUR/PKGBUILD; then
+          if cmp -s ../bitscoper-usb-logger/PKGBUILD ${{ github.workspace }}/AUR/PKGBUILD; then
             echo "PKGBUILD files are identical."
           else
-            cp ${{ github.workspace }}/AUR/PKGBUILD ../bitscoper-usb-logger-bin/PKGBUILD
+            cp ${{ github.workspace }}/AUR/PKGBUILD ../bitscoper-usb-logger/PKGBUILD
             echo "CHANGES_DETECTED=1" >> $GITHUB_ENV
           fi
-          if cmp -s ../bitscoper-usb-logger-bin/.SRCINFO ${{ github.workspace }}/AUR/.SRCINFO; then
+          if cmp -s ../bitscoper-usb-logger/.SRCINFO ${{ github.workspace }}/AUR/.SRCINFO; then
             echo ".SRCINFO files are identical."
           else
-            cp ${{ github.workspace }}/AUR/.SRCINFO ../bitscoper-usb-logger-bin/.SRCINFO
+            cp ${{ github.workspace }}/AUR/.SRCINFO ../bitscoper-usb-logger/.SRCINFO
             echo "CHANGES_DETECTED=1" >> $GITHUB_ENV
           fi
         shell: bash
@@ -47,7 +47,7 @@ jobs:
       - name: Commit and Push Changes
         run: |
           if [ "$CHANGES_DETECTED" = "1" ]; then
-            cd ../bitscoper-usb-logger-bin
+            cd ../bitscoper-usb-logger
             git config user.email "bitscoper@gmail.com"
             git config user.name "bitscoper"
             git add .

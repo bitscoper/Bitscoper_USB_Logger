@@ -12,7 +12,7 @@ Monitors udev USB events and logs device attributes. Works on Linux.
 ## Repositories
 
 <div align="center">
-    <a href="https://aur.archlinux.org/packages/bitscoper-usb-logger-bin">
+    <a href="https://aur.archlinux.org/packages/bitscoper-usb-logger">
       <img
         src="https://raw.githubusercontent.com/bitscoper/bitscoper/main/External_Files/AUR.png"
         height="48"

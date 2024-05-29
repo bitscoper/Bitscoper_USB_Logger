@@ -1,10 +1,10 @@
 # Maintainer: bitscoper <bitscoper@gmail.com>
 
-pkgname=bitscoper-usb-logger-bin
+pkgname=bitscoper-usb-logger
 pkgdesc="Monitors udev USB events and logs device attributes."
 url="https://github.com/bitscoper/Bitscoper_USB_Logger/"
 license=("GPL3")
-provides=("bitscoper-usb-logger-bin")
+provides=("bitscoper-usb-logger")
 makedepends=("base-devel" "make" "gcc")
 # depends=("")
 # checkdepends=("")
